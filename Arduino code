@@ -1,0 +1,51 @@
+#include <Stepper.h>
+
+#define A 2
+#define B 3
+#define C 4
+#define D 5
+
+const int stepsPerRevolution = 200;
+int soundSensor = 7;
+int FirstTime = 1;
+
+Stepper myStepper(stepsPerRevolution, 2, 3, 4, 5);
+
+void setup(){
+  myStepper.setSpeed(45);
+  pinMode(A,OUTPUT);
+  pinMode(B,OUTPUT);
+  pinMode(C,OUTPUT);
+  pinMode(D,OUTPUT);
+  pinMode (soundSensor, INPUT);
+}
+
+void write(int a,int b,int c,int d){
+  digitalWrite(A,a);
+  digitalWrite(B,b);
+  digitalWrite(C,c);
+  digitalWrite(D,d);
+}
+
+void spins(int times) {
+  myStepper.step(times);
+  write(0,0,0,0);
+}
+
+void loop()
+{
+  int statusSensor = digitalRead (soundSensor);
+
+  if (FirstTime == 1) {
+    spins(50000);
+    FirstTime = 0;
+  }
+  else {
+    if (statusSensor == 1) {
+      spins(50000);
+    }
+    else {
+      write(0,0,0,0);
+    }
+  }
+}
